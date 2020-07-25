@@ -148,7 +148,7 @@ dbc_proc_callback_t::dbc_proc_callback_t( player_t* p, const special_effect_t& e
  */
 void dbc_proc_callback_t::initialize()
 {
-  listener->sim->print_debug( "Initializing proc: {}", effect );
+if(listener->sim->debug) { listener->sim->print_debug( "Initializing proc: {}", effect ); }
 
   // Initialize proc chance triggers. Note that this code only chooses one, and
   // prioritizes RPPM > PPM > proc chance.

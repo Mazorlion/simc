@@ -213,8 +213,8 @@ void attack_t::attack_table_t::build_table( double miss_chance,
                                             double glance_chance,
                                             double crit_chance, sim_t* sim )
 {
-  sim->print_debug("attack_t::build_table: miss={} dodge={} parry={} glance={} crit={}",
-        miss_chance, dodge_chance, parry_chance, glance_chance, crit_chance );
+if(sim->debug) { sim->print_debug("attack_t::build_table: miss={} dodge={} parry={} glance={} crit={}",
+        miss_chance, dodge_chance, parry_chance, glance_chance, crit_chance ); }
 
   assert( crit_chance >= 0 && crit_chance <= 1.0 );
 
@@ -383,9 +383,9 @@ void attack_t::reschedule_auto_attack( double old_swing_haste )
       return;
     }
 
-    sim->print_debug("Haste change, reschedule {} attack from {} to {} (speed {} -> {}, remains {})",
+if(sim->debug) { sim->print_debug("Haste change, reschedule {} attack from {} to {} (speed {} -> {}, remains {})",
         name(), execute_event->remains(), new_time_to_hit, old_swing_haste, player->cache.attack_speed(),
-        time_to_hit);
+        time_to_hit); }
 
     if ( new_time_to_hit > time_to_hit )
       execute_event->reschedule( new_time_to_hit );
@@ -516,8 +516,8 @@ double ranged_attack_t::composite_target_multiplier( player_t* target ) const
 
 void ranged_attack_t::schedule_execute( action_state_t* execute_state )
 {
-  sim->print_log( "{} schedules execute for {} ({})",
-      player->name(), name(), player->resources.current[ player->primary_resource() ] );
+if(sim->log) { sim->print_log( "{} schedules execute for {} ({})",
+      player->name(), name(), player->resources.current[ player->primary_resource() ] ); }
 
   time_to_execute = execute_time();
 

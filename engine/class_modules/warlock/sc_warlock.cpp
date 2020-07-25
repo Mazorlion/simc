@@ -167,7 +167,7 @@ namespace warlock
       {
         if ( current_ua->is_ticking() )
         {
-          warlock.sim->print_log( "Player {} demised. Warlock {} gains a shard from unstable affliction.", target->name(), warlock.name() );
+if(warlock.sim->log) { warlock.sim->print_log( "Player {} demised. Warlock {} gains a shard from unstable affliction.", target->name(), warlock.name() ); }
 
           warlock.resource_gain( RESOURCE_SOUL_SHARD, 1, warlock.gains.unstable_affliction_refund );
 
@@ -178,7 +178,7 @@ namespace warlock
 
       if ( dots_drain_soul->is_ticking() )
       {
-        warlock.sim->print_log( "Player {} demised. Warlock {} gains a shard from drain soul.", target->name(), warlock.name() );
+if(warlock.sim->log) { warlock.sim->print_log( "Player {} demised. Warlock {} gains a shard from drain soul.", target->name(), warlock.name() ); }
 
         warlock.resource_gain( RESOURCE_SOUL_SHARD, 1, warlock.gains.drain_soul );
       }
@@ -186,14 +186,14 @@ namespace warlock
 
     if ( debuffs_haunt->check() )
     {
-      warlock.sim->print_log( "Player {} demised. Warlock {} reset haunt's cooldown.", target->name(), warlock.name() );
+if(warlock.sim->log) { warlock.sim->print_log( "Player {} demised. Warlock {} reset haunt's cooldown.", target->name(), warlock.name() ); }
 
       warlock.cooldowns.haunt->reset( true );
     }
 
     if ( debuffs_shadowburn->check() )
     {
-      warlock.sim->print_log( "Player {} demised. Warlock {} reset shadowburn's cooldown.", target->name(), warlock.name() );
+if(warlock.sim->log) { warlock.sim->print_log( "Player {} demised. Warlock {} reset shadowburn's cooldown.", target->name(), warlock.name() ); }
 
       warlock.cooldowns.shadowburn->reset( true );
     }

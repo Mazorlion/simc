@@ -172,8 +172,8 @@ public:
       cd_duration            = timespan_t::zero();
       cooldown->last_charged = sim->current_time();
 
-      sim->print_debug( "{} shadowy insight proc occured during {} cast. Deferring cooldown reset.",
-          priest(), *this );
+if(sim->debug) { sim->print_debug( "{} shadowy insight proc occured during {} cast. Deferring cooldown reset.",
+          priest(), *this ); }
     }
 
     priest_spell_t::update_ready( cd_duration );
@@ -1014,7 +1014,7 @@ struct void_eruption_t final : public priest_spell_t
     impact_action = new void_eruption_damage_t( p );
     add_child( impact_action );
 
-    sim->print_debug( "Void Eruption requires {} insanity", insanity_required );
+if(sim->debug) { sim->print_debug( "Void Eruption requires {} insanity", insanity_required ); }
 
     // We don't want to lose insanity when casting it!
     base_costs[ RESOURCE_INSANITY ] = 0;
@@ -1193,7 +1193,7 @@ struct mental_fortitude_t final : public priest_absorb_t
     double limit   = priest().resources.max[ RESOURCE_HEALTH ] * 0.08;
     stacked_amount = std::min( stacked_amount, limit );
 
-    sim->print_log( "{} {} stacked amount: {}", *player, *this, stacked_amount );
+if(sim->log) { sim->print_log( "{} {} stacked amount: {}", *player, *this, stacked_amount ); }
 
     // Trigger Absorb Buff
     if ( buff == nullptr )
@@ -1205,9 +1205,9 @@ struct mental_fortitude_t final : public priest_absorb_t
     {
       buff->trigger( 1, stacked_amount );
 
-      sim->print_log( "{} {} applies absorb on {} for {} ({}) ({})", *player, *this,
+if(sim->log) { sim->print_log( "{} {} applies absorb on {} for {} ({}) ({})", *player, *this,
                              *s->target, s->result_amount, stacked_amount,
-                             util::result_type_string( s->result ) );
+                             util::result_type_string( s->result ) ); }
     }
 
     stats->add_result( 0.0, s->result_total, result_amount_type::ABSORB, s->result, s->block_result, s->target );
@@ -1576,7 +1576,7 @@ struct priest_t::insanity_end_event_t : public event_t
 
   void execute() override
   {
-    actor.sim->print_debug( "{} insanity-track insanity-loss", actor );
+if(actor.sim->debug) { actor.sim->print_debug( "{} insanity-track insanity-loss", actor ); }
 
     actor.buffs.voidform->expire();
     actor.insanity.end = nullptr;
@@ -1663,8 +1663,8 @@ void priest_t::insanity_state_t::gain( double value, gain_t* gain_obj, action_t*
     auto current = actor.resources.current[ RESOURCE_INSANITY ];
     auto max     = actor.resources.max[ RESOURCE_INSANITY ];
 
-    actor.sim->print_debug( "{} insanity-track gain, value={}, current={}/{}, new={}/{}",
-        actor, value, current, max, clamp( current + value, 0.0, max ), max );
+if(actor.sim->debug) { actor.sim->print_debug( "{} insanity-track gain, value={}, current={}/{}, new={}/{}",
+        actor, value, current, max, clamp( current + value, 0.0, max ), max ); }
   }
 
   actor.resource_gain( RESOURCE_INSANITY, value, gain_obj, source_action );
@@ -1711,12 +1711,12 @@ void priest_t::insanity_state_t::drain()
     auto current = actor.resources.current[ RESOURCE_INSANITY ];
     auto max     = actor.resources.max[ RESOURCE_INSANITY ];
 
-    actor.sim->print_debug(
+if(actor.sim->debug) { actor.sim->print_debug(
         "{} insanity-track drain, "
         "drain_per_second={}, last_drained={}, drain_interval={}, "
         "current={}/{}, new={}/{}",
         actor, drain_per_second, last_drained, drain_interval, current, max,
-        ( current - drained ), max );
+        ( current - drained ), max ); }
   }
 
   // Update last drained, we're about to reduce the amount of insanity the actor has
@@ -1764,12 +1764,12 @@ void priest_t::insanity_state_t::adjust_end_event()
     auto current = actor.resources.current[ RESOURCE_INSANITY ];
     auto max     = actor.resources.max[ RESOURCE_INSANITY ];
 
-    actor.sim->print_debug(
+if(actor.sim->debug) { actor.sim->print_debug(
         "{} insanity-track adjust-end-event, "
         "drain_per_second={}, insanity={}/{}, seconds_left={}, "
         "old_left={}",
         actor, drain_per_second, current, max, seconds_left,
-        end ? end->remains().total_seconds() : -1.0 );
+        end ? end->remains().total_seconds() : -1.0 ); }
   }
 
   // If we have no draining occurring, cancel the event.

@@ -346,10 +346,10 @@ bool item_database::apply_item_bonus( item_t& item, const item_bonus_entry_t& en
       item.parsed.data.cooldown_group[ index ] = effect.cooldown_group;
       item.parsed.data.cooldown_group_duration[ index ] = effect.cooldown_group_duration;
 
-      item.player->sim->print_debug( "Player {} item '{}' adding effect {} (type={}, index={})",
+if(item.player->sim->debug) { item.player->sim->print_debug( "Player {} item '{}' adding effect {} (type={}, index={})",
           item.player->name(), item.name(), effect.spell_id,
           util::item_spell_trigger_string( static_cast<item_spell_trigger_type>( effect.type ) ),
-          index );
+          index ); }
       break;
     }
     default:

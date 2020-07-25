@@ -206,9 +206,9 @@ void variable_t::reset()
     auto it = range::find(action_list->foreground_action_list, this);
     if (it != action_list->foreground_action_list.end())
     {
-      sim->print_debug("{} removing variable action {} from APL because the variable value is "
+if(sim->debug) { sim->print_debug("{} removing variable action {} from APL because the variable value is "
         "constant (value={})",
-        player->name(), signature_str, var->current_value_);
+        player->name(), signature_str, var->current_value_); }
 
       action_list->foreground_action_list.erase(it);
     }

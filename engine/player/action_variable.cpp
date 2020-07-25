@@ -51,8 +51,8 @@ void action_variable_t::optimize()
   // whatever the value is in current_value_
   if (is_constant)
   {
-    player->sim->print_debug("{} variable {} is constant, value={}",
-      player->name(), name_, current_value_);
+if(player->sim->debug) { player->sim->print_debug("{} variable {} is constant, value={}",
+      player->name(), name_, current_value_); }
     constant_value_ = current_value_;
     // Make default value also the constant value, so that debug output is sensible
     default_ = current_value_;

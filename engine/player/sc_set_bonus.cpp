@@ -231,7 +231,7 @@ void set_bonus_t::initialize()
     }
   }
 
-  actor->sim->print_debug("Initialized set bonus: {}", *this);
+if(actor->sim->debug) { actor->sim->print_debug("Initialized set bonus: {}", *this); }
 }
 
 std::string set_bonus_t::to_string() const

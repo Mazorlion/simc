@@ -1020,7 +1020,7 @@ public:
       a.affects = base_t::data().affected_by( a.effect );
       if (a.affects)
       {
-        ab::sim->print_debug("Action {} ({}) affected by {} (idx={}).", ab::name(), ab::data().id(), a.effect.spell()->name_cstr(), a.effect.spell_effect_num()+1);
+if(ab::sim->debug) { ab::sim->print_debug("Action {} ({}) affected by {} (idx={}).", ab::name(), ab::data().id(), a.effect.spell()->name_cstr(), a.effect.spell_effect_num()+1); }
       }
     }
   }

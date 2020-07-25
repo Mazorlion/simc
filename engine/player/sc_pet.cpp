@@ -235,7 +235,7 @@ void pet_t::create_buffs()
   }
   else
   {
-    sim->print_debug( "Creating Auras, Buffs, and Debuffs for pet '{}'.", name() );
+if(sim->debug) { sim->print_debug( "Creating Auras, Buffs, and Debuffs for pet '{}'.", name() ); }
 
     buffs.stunned  = make_buff( this, "stunned" )
       ->set_max_stack( 1 );
@@ -261,16 +261,16 @@ void pet_t::adjust_duration( timespan_t adjustment )
   auto new_duration = expiration->remains() + adjustment;
   if ( new_duration <= 0_ms )
   {
-    sim->print_debug( "{} pet {} duration adjusted to {}, dismissing ...",
-      owner->name(), name_str, new_duration );
+if(sim->debug) { sim->print_debug( "{} pet {} duration adjusted to {}, dismissing ...",
+      owner->name(), name_str, new_duration ); }
     dismiss();
   }
   else
   {
     duration += adjustment;
 
-    sim->print_debug( "{} pet {} duration adjusted to {}",
-      owner->name(), name_str, new_duration );
+if(sim->debug) { sim->print_debug( "{} pet {} duration adjusted to {}",
+      owner->name(), name_str, new_duration ); }
 
     if ( new_duration > expiration->remains() )
     {

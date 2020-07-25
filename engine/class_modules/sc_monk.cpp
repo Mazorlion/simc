@@ -5585,12 +5585,12 @@ struct stagger_self_damage_t : public residual_action::residual_periodic_action_
       assert( std::fabs( amount_remaining() - damage_remaining_after_clear ) < 1.0 &&
               "stagger remaining amount after clear does not match" );
 
-      sim->print_debug( "{} partially clears stagger by {} (requested:  {:.2f}%). Damage remaining is {}.",
-                        player->name(), amount_cleared, percent_amount * 100.0, damage_remaining_after_clear );
+if(sim->debug) { sim->print_debug( "{} partially clears stagger by {} (requested:  {:.2f}%). Damage remaining is {}.",
+                        player->name(), amount_cleared, percent_amount * 100.0, damage_remaining_after_clear ); }
     }
     else
     {
-      sim->print_debug( "{} no active stagger to clear (requested pct: {}).", player->name(), percent_amount * 100.0 );
+if(sim->debug) { sim->print_debug( "{} no active stagger to clear (requested pct: {}).", player->name(), percent_amount * 100.0 ); }
     }
 
     p()->stagger_damage_changed();
@@ -5617,12 +5617,12 @@ struct stagger_self_damage_t : public residual_action::residual_periodic_action_
       assert( std::fabs( amount_remaining() - damage_remaining_after_clear ) < 1.0 &&
               "stagger remaining amount after clear does not match" );
 
-      sim->print_debug( "{} partially clears stagger by {} (requested: {}). Damage remaining is {}.", player->name(),
-                        amount_cleared, amount, damage_remaining_after_clear );
+if(sim->debug) { sim->print_debug( "{} partially clears stagger by {} (requested: {}). Damage remaining is {}.", player->name(),
+                        amount_cleared, amount, damage_remaining_after_clear ); }
     }
     else
     {
-      sim->print_debug( "{} no active stagger to clear (requested amount: {}).", player->name(), amount );
+if(sim->debug) { sim->print_debug( "{} no active stagger to clear (requested amount: {}).", player->name(), amount ); }
     }
 
     p()->stagger_damage_changed();
@@ -9169,8 +9169,8 @@ void monk_t::vision_of_perfection_proc()
     {
       if ( buff.storm_earth_and_fire->check() )
       {
-        sim->print_debug( "{} vision_of_perfection extending storm_earth_and_fire duration by {}",
-          name(), sef_duration );
+if(sim->debug) { sim->print_debug( "{} vision_of_perfection extending storm_earth_and_fire duration by {}",
+          name(), sef_duration ); }
 
         buff.storm_earth_and_fire->extend_duration( this, sef_duration );
         range::for_each( pet.sef, [&sef_duration]( auto* pet ) {
@@ -9179,8 +9179,8 @@ void monk_t::vision_of_perfection_proc()
       }
       else
       {
-        sim->print_debug( "{} vision_of_perfection summoning storm_earth_and_fire duration for {}",
-          name(), sef_duration );
+if(sim->debug) { sim->print_debug( "{} vision_of_perfection summoning storm_earth_and_fire duration for {}",
+          name(), sef_duration ); }
 
         summon_storm_earth_and_fire( sef_duration );
       }
@@ -10284,7 +10284,7 @@ void monk_t::stagger_damage_changed( bool last_tick )
       break;
     }
   }
-  sim->print_debug( "Previous stagger buff was {}.", previous_buff ? previous_buff->name() : "none" );
+if(sim->debug) { sim->print_debug( "Previous stagger buff was {}.", previous_buff ? previous_buff->name() : "none" ); }
 
   buff_t* new_buff = nullptr;
   dot_t* dot       = nullptr;
@@ -10295,7 +10295,7 @@ void monk_t::stagger_damage_changed( bool last_tick )
   {
     auto current_tick_dmg                = current_stagger_tick_dmg();
     auto current_tick_dmg_per_max_health = current_tick_dmg / resources.max[ RESOURCE_HEALTH ];
-    sim->print_debug( "Stagger dmg: {} ({}%):", current_tick_dmg, current_tick_dmg_per_max_health * 100.0 );
+if(sim->debug) { sim->print_debug( "Stagger dmg: {} ({}%):", current_tick_dmg, current_tick_dmg_per_max_health * 100.0 ); }
     if ( current_tick_dmg_per_max_health > 0.06 )
     {
       new_buff = buff.heavy_stagger;
@@ -10312,7 +10312,7 @@ void monk_t::stagger_damage_changed( bool last_tick )
       niuzao   = 1;
     }
   }
-  sim->print_debug( "Stagger new buff is {}.", new_buff ? new_buff->name() : "none" );
+if(sim->debug) { sim->print_debug( "Stagger new buff is {}.", new_buff ? new_buff->name() : "none" ); }
 
   if ( previous_buff && previous_buff != new_buff )
   {

@@ -1702,8 +1702,8 @@ void items::briny_barnacle( special_effect_t& effect )
 
       if ( td->debuff.choking_brine->up() )
       {
-        target->sim->print_log( "Enemy {} dies while afflicted by Choking Brine, applying debuff on all neaby enemies",
-                                target->name_str );
+if(target->sim->log) { target->sim->print_log( "Enemy {} dies while afflicted by Choking Brine, applying debuff on all neaby enemies",
+                                target->name_str ); }
         explosion->schedule_execute();
       }
     } );
@@ -3488,7 +3488,7 @@ void items::shiver_venom_relic_onuse( special_effect_t& effect )
     {
       dot_t* sv_dot = target->find_dot( "shiver_venom", player );
       if ( !sv_dot )
-        sim->print_debug( "venomous_shivers->action_multiplier() cannot find shiver_venom dot on {}", target->name() );
+if(sim->debug) { sim->print_debug( "venomous_shivers->action_multiplier() cannot find shiver_venom dot on {}", target->name() ); }
 
       return proc_t::action_multiplier() * ( sv_dot ? sv_dot->current_stack() : 0.0 );
     }
@@ -3499,7 +3499,7 @@ void items::shiver_venom_relic_onuse( special_effect_t& effect )
 
       dot_t* sv_dot = target->find_dot( "shiver_venom", player );
       if ( !sv_dot )
-        sim->print_debug( "venomous_shivers->execute() cannot find shiver_venom dot on {}", target->name() );
+if(sim->debug) { sim->print_debug( "venomous_shivers->execute() cannot find shiver_venom dot on {}", target->name() ); }
       else
         sv_dot->cancel();
     }
@@ -3682,8 +3682,8 @@ void items::aquipotent_nautilus( special_effect_t& effect )
         make_event( player->sim, time_to_travel, [this] {
           if ( rng().real() < sim->bfa_opts.aquipotent_nautilus_catch_chance )
           {
-            sim->print_debug( "surging_flood return wave caught, adjusting cooldown from {} to {}", cd->remains(),
-                              cd->remains() + reduction );
+if(sim->debug) { sim->print_debug( "surging_flood return wave caught, adjusting cooldown from {} to {}", cd->remains(),
+                              cd->remains() + reduction ); }
             cd->adjust( reduction );
             cdgrp->adjust( reduction );
           }
@@ -3723,8 +3723,8 @@ void items::zaquls_portal_key( special_effect_t& effect )
           ( listener->last_foreground_action ? listener->last_foreground_action->time_to_execute : 0_ms ) +
           listener->base_gcd * listener->gcd_current_haste_value;
 
-      listener->sim->print_debug( "za'qul's portal key portal spawned, void_negotiation scheduled in {} at {}", delay,
-                                  listener->sim->current_time() + delay );
+if(listener->sim->debug) { listener->sim->print_debug( "za'qul's portal key portal spawned, void_negotiation scheduled in {} at {}", delay,
+                                  listener->sim->current_time() + delay ); }
       make_event( listener->sim, delay, [this] {
         // Portals spawn close enough that distance moving seems unnecessary, and an instance of moving() will suffice
         if ( rng().real() < listener->sim->bfa_opts.zaquls_portal_key_move_chance )
@@ -3862,7 +3862,7 @@ void items::azsharas_font_of_power( special_effect_t& effect )
         auto it = range::find( apl, use_action );
         if ( it == apl.end() )
         {
-          sim->print_debug( "WARNING: Precombat /use_item for Font of Power exists but not found in precombat APL!" );
+if(sim->debug) { sim->print_debug( "WARNING: Precombat /use_item for Font of Power exists but not found in precombat APL!" ); }
           return;
         }
 
@@ -3875,8 +3875,8 @@ void items::azsharas_font_of_power( special_effect_t& effect )
           {
             timespan_t delta =
                 std::max( std::max( a->base_execute_time, a->trigger_gcd ) * a->composite_haste(), a->min_gcd );
-            sim->print_debug( "PRECOMBAT: Azshara's Font of Power prechannel timing pushed by {} for {}", delta,
-                              a->name() );
+if(sim->debug) { sim->print_debug( "PRECOMBAT: Azshara's Font of Power prechannel timing pushed by {} for {}", delta,
+                              a->name() ); }
             time += delta;
 
             return a->harmful;  // stop processing after first valid harmful spell
@@ -3896,9 +3896,9 @@ void items::azsharas_font_of_power( special_effect_t& effect )
       // shared cooldown at start of combat
       auto cdgrp_dur = std::max( 0_ms, effect->cooldown_group_duration() - time );
 
-      sim->print_debug(
+if(sim->debug) { sim->print_debug(
           "PRECOMBAT: Azshara's Font of Power started {}s before combat via {}, channeled for {}s, {}s in-combat buff",
-          time, use_action ? "APL" : "BFA_OPT", channel, actual );
+          time, use_action ? "APL" : "BFA_OPT", channel, actual ); }
 
       buff->trigger( 1, buff_t::DEFAULT_VALUE(), 1.0, actual );
 
@@ -4093,7 +4093,7 @@ void items::anuazshara_staff_of_the_eternal( special_effect_t& effect )
     {
       lockout->trigger();
       proc_t::execute();
-      sim->print_debug( "anu-azshara potency unleashed at {} stacks!", buff->stack() );
+if(sim->debug) { sim->print_debug( "anu-azshara potency unleashed at {} stacks!", buff->stack() ); }
       buff->expire();
     }
   };
@@ -4640,8 +4640,8 @@ void items::divers_folly( special_effect_t& effect )
 
     void trigger( action_t* a, void* s ) override
     {
-      listener->sim->print_debug( "Bioelectric Charge (Diver's Folly) discharged for {} damage!",
-                                  proc_action->base_dd_min );
+if(listener->sim->debug) { listener->sim->print_debug( "Bioelectric Charge (Diver's Folly) discharged for {} damage!",
+                                  proc_action->base_dd_min ); }
 
       dbc_proc_callback_t::trigger( a, s );
       deactivate();  // trigger should always be a success, so deactivate immediately on trigger
@@ -4679,8 +4679,8 @@ void items::divers_folly( special_effect_t& effect )
 
           double old_  = buff->current_value;
           double this_ = s->result_amount * pct;
-          buff->sim->print_debug( "Bioelectric Charge (Diver's Folly) storing {}({}% of {}) damage from {}: {} -> {}",
-                                  this_, pct, s->result_amount, s->action->name(), old_, old_ + this_ );
+if(buff->sim->debug) { buff->sim->print_debug( "Bioelectric Charge (Diver's Folly) storing {}({}% of {}) damage from {}: {} -> {}",
+                                  this_, pct, s->result_amount, s->action->name(), old_, old_ + this_ ); }
           buff->current_value += this_;
           return assessor::CONTINUE;
         } );
@@ -5291,11 +5291,11 @@ const special_effect_t* find_logic_loop_effect( player_t* player )
     auto it = unique_gear::find_special_effect( player, id, SPECIAL_EFFECT_EQUIP );
     if ( it )
     {
-      player->sim->print_debug( "Logic Loop found! Pairing to {}...", it->item->full_name() );
+if(player->sim->debug) { player->sim->print_debug( "Logic Loop found! Pairing to {}...", it->item->full_name() ); }
       return it;
     }
   }
-  player->sim->print_debug( "404 NOT FOUND. Powering down..." );
+if(player->sim->debug) { player->sim->print_debug( "404 NOT FOUND. Powering down..." ); }
   return nullptr;
 }
 
@@ -5313,7 +5313,7 @@ struct logic_loop_callback_t : public dbc_proc_callback_t
     if ( !proc_buff && !proc_action )
     {
       deactivate();
-      listener->sim->print_debug( "Logic Loop pairing failure. Deactivating..." );
+if(listener->sim->debug) { listener->sim->print_debug( "Logic Loop pairing failure. Deactivating..." ); }
     }
   }
 };
@@ -5438,13 +5438,13 @@ void items::overclocking_bit_band( special_effect_t& effect )
                ->add_stat( STAT_HASTE_RATING, effect.driver()->effectN( 1 ).average( effect.item ) );
   }
 
-  effect.player->sim->print_debug( "{} looking for Logic Loop to pair with...", effect.item->full_name() );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "{} looking for Logic Loop to pair with...", effect.item->full_name() ); }
   auto loop_driver = find_logic_loop_effect( effect.player );
   if ( loop_driver )
   {
     const_cast<special_effect_t*>( loop_driver )->custom_buff = buff;
-    effect.player->sim->print_debug( "Success! {} paired with {}.", effect.item->full_name(),
-                                     loop_driver->item->full_name() );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "Success! {} paired with {}.", effect.item->full_name(),
+                                     loop_driver->item->full_name() ); }
   }
 
   effect.type = SPECIAL_EFFECT_NONE;
@@ -5479,13 +5479,13 @@ void items::shorting_bit_band( special_effect_t& effect )
 
   auto action = create_proc_action<shorting_bit_band_t>( "shorting_bit_band", effect );
 
-  effect.player->sim->print_debug( "{} looking for Logic Loop to pair with...", effect.item->full_name() );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "{} looking for Logic Loop to pair with...", effect.item->full_name() ); }
   auto loop_driver = find_logic_loop_effect( effect.player );
   if ( loop_driver )
   {
     const_cast<special_effect_t*>( loop_driver )->execute_action = action;
-    effect.player->sim->print_debug( "Success! {} paired with {}.", effect.item->full_name(),
-                                     loop_driver->item->full_name() );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "Success! {} paired with {}.", effect.item->full_name(),
+                                     loop_driver->item->full_name() ); }
   }
 
   effect.type = SPECIAL_EFFECT_NONE;
@@ -5547,7 +5547,7 @@ void items::hyperthread_wristwraps( special_effect_t& effect )
     {
       if ( spell_blacklist.find( a->id ) == spell_blacklist.end() )
       {
-        listener->sim->print_debug( "Adding {} to Hyperthread Wristwraps tracked spells.", a->name_str );
+if(listener->sim->debug) { listener->sim->print_debug( "Adding {} to Hyperthread Wristwraps tracked spells.", a->name_str ); }
         last_used.push_back( a );
         while ( last_used.size() > max_size )
           last_used.erase( last_used.begin() );
@@ -5578,7 +5578,7 @@ void items::hyperthread_wristwraps( special_effect_t& effect )
 
       for ( auto a : tracker->last_used )
       {
-        sim->print_debug( "Reducing cooldown of action {} by {} s.", a->name_str, reduction.total_seconds() );
+if(sim->debug) { sim->print_debug( "Reducing cooldown of action {} by {} s.", a->name_str, reduction.total_seconds() ); }
         a->cooldown->adjust( -reduction );
       }
     }
@@ -6007,7 +6007,7 @@ void set_bonus::titanic_empowerment( special_effect_t& effect )
       if ( !vita_shard || !void_shard )
       {
         // Don't attempt to guess the correct stat amount when the set bonus is enabled manually.
-        effect.player->sim->print_debug( "Titanic Empowerment requires both trinkets to be equipped, disabling." );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "Titanic Empowerment requires both trinkets to be equipped, disabling." ); }
         return;
       }
 
@@ -6425,8 +6425,8 @@ void corruption::glimpse_of_clarity( special_effect_t& effect )
         // Only class spells with a cooldown have their cooldown reduced.
         if ( buff && buff->check() && util::is_adjustable_class_spell( a ) )
         {
-          listener->sim->print_debug( "Glimpse of Clarity reducing the cooldown of {} by {}.", a->name_str,
-                                      buff->default_value );
+if(listener->sim->debug) { listener->sim->print_debug( "Glimpse of Clarity reducing the cooldown of {} by {}.", a->name_str,
+                                      buff->default_value ); }
           a->cooldown->adjust( -timespan_t::from_seconds( buff->default_value ) );
           buff->decrement();
         }

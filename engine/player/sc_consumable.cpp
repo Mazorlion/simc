@@ -108,7 +108,7 @@ struct elixir_t : public action_t
       }
     }
 
-    sim->print_log( "{} uses elixir {}.", p.name(), data -> name );
+if(sim->log) { sim->print_log( "{} uses elixir {}.", p.name(), data -> name ); }
 
   }
   bool ready() override
@@ -627,7 +627,7 @@ struct potion_t : public dbc_consumable_base_t
       {
         timespan_t delta =
           std::max( std::max( a->base_execute_time, a->trigger_gcd ) * a->composite_haste(), a->min_gcd );
-        sim->print_debug( "PRECOMBAT: {} pre-pot timing pushed by {} for {}", consumable_name, delta, a->name() );
+if(sim->debug) { sim->print_debug( "PRECOMBAT: {} pre-pot timing pushed by {} for {}", consumable_name, delta, a->name() ); }
         pre_pot_time += delta;
 
         return a->harmful;
@@ -635,7 +635,7 @@ struct potion_t : public dbc_consumable_base_t
       return false;
     } );
 
-    sim->print_debug( "PRECOMBAT: {} quaffed {}s before combat.", consumable_name, pre_pot_time );
+if(sim->debug) { sim->print_debug( "PRECOMBAT: {} quaffed {}s before combat.", consumable_name, pre_pot_time ); }
   }
 
   void update_ready( timespan_t cd_duration = timespan_t::min() ) override

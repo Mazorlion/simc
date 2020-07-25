@@ -575,8 +575,8 @@ void priest_td_t::target_demise()
                                 nullptr );
   }
 
-  priest().sim->print_debug( "Player '{}' demised. Priest '{}' resets targetdata for him.", target->name(),
-                             priest().name() );
+if(priest().sim->debug) { priest().sim->print_debug( "Player '{}' demised. Priest '{}' resets targetdata for him.", target->name(),
+                             priest().name() ); }
 
   reset();
 }

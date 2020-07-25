@@ -1186,7 +1186,7 @@ namespace warlock
           setup += gcd;
         }
 
-        sim->print_log("setup required {}", setup);
+if(sim->log) { sim->print_log("setup required {}", setup); }
 
         if (cooldowns.deathbolt->remains() <= setup)
           ready = true;

@@ -1055,8 +1055,8 @@ double action_t::total_crit_bonus( action_state_t* state ) const
   double bonus =
       ( ( 1.0 + base_crit_bonus ) * crit_multiplier_buffed - 1.0 ) * composite_crit_damage_bonus_multiplier();
 
-  sim->print_debug("{} crit_bonus for {}: total={} base={} mult_buffed={} damage_bonus_mult={}",
-      player->name(), name(), bonus, crit_bonus, crit_multiplier_buffed, composite_crit_damage_bonus_multiplier() );
+if(sim->debug) { sim->print_debug("{} crit_bonus for {}: total={} base={} mult_buffed={} damage_bonus_mult={}",
+      player->name(), name(), bonus, crit_bonus, crit_multiplier_buffed, composite_crit_damage_bonus_multiplier() ); }
 
   return bonus;
 }
@@ -1071,10 +1071,10 @@ double action_t::calculate_weapon_damage( double attack_power ) const
   double power_damage     = weapon_speed.total_seconds() * weapon_power_mod * attack_power;
   double total_dmg        = dmg + power_damage;
 
-  sim->print_debug("{} weapon damage for {}: base=({} to {}) total={} weapon_damage={} bonus_damage={} "
+if(sim->debug) { sim->print_debug("{} weapon damage for {}: base=({} to {}) total={} weapon_damage={} bonus_damage={} "
       "speed={} power_damage={} ap={}",
       player->name(), name(), weapon->min_dmg, weapon->max_dmg, total_dmg, dmg, weapon->bonus_dmg,
-      weapon_speed, power_damage, attack_power );
+      weapon_speed, power_damage, attack_power ); }
 
   return total_dmg;
 }
@@ -1110,12 +1110,12 @@ double action_t::calculate_tick_amount( action_state_t* state, double dot_multip
   // subsequent impact).
   amount = calculate_crit_damage_bonus( state );
 
-  sim->print_debug("{} tick amount for {} on {}: amount={} initial_amount={} base={} bonus={} s_mod={} s_power={} a_mod={} "
+if(sim->debug) { sim->print_debug("{} tick amount for {} on {}: amount={} initial_amount={} base={} bonus={} s_mod={} s_power={} a_mod={} "
         "a_power={} mult={}, tick_mult={}",
         player->name(), name(), state->target->name(),
         amount, init_tick_amount, base_ta( state ), bonus_ta( state ),
         spell_tick_power_coefficient( state ), state->composite_spell_power(), attack_tick_power_coefficient( state ),
-        state->composite_attack_power(), state->composite_ta_multiplier(), dot_multiplier );
+        state->composite_attack_power(), state->composite_ta_multiplier(), dot_multiplier ); }
 
   return amount;
 }
@@ -1229,13 +1229,13 @@ double action_t::calculate_direct_amount( action_state_t* state ) const
     amount = 0;
   }
 
-  sim->print_debug(
+if(sim->debug) { sim->print_debug(
       "{} direct amount for {}: amount={} initial_amount={} weapon={} base={} s_mod={} s_power={} "
       "a_mod={} a_power={} mult={} w_mult={} w_slot_mod={} bonus_da={}",
       player->name(), name(), amount, state->result_raw, weapon_amount, base_direct_amount,
       spell_direct_power_coefficient( state ), state->composite_spell_power(),
       attack_direct_power_coefficient( state ), state->composite_attack_power(), state->composite_da_multiplier(),
-      weapon_multiplier, weapon_slot_modifier, bonus_da( state ) );
+      weapon_multiplier, weapon_slot_modifier, bonus_da( state ) ); }
 
   // Record total amount to state
   if ( result_is_miss( state->result ) )
@@ -1324,8 +1324,8 @@ void action_t::consume_resource()
 
   player->resource_loss( cr, last_resource_cost, nullptr, this );
 
-  sim->print_log("{} consumes {} {} for {} ({})",
-      player->name(), last_resource_cost, util::resource_type_string( cr ), name(), player->resources.current[ cr ] );
+if(sim->log) { sim->print_log("{} consumes {} {} for {} ({})",
+      player->name(), last_resource_cost, util::resource_type_string( cr ), name(), player->resources.current[ cr ] ); }
 
   stats->consume_resource( current_resource(), last_resource_cost );
 }
@@ -1365,10 +1365,10 @@ size_t action_t::available_targets( std::vector<player_t*>& tl ) const
 
   if ( sim->debug && !sim->distance_targeting_enabled )
   {
-    sim->print_debug("{} regenerated target cache for {} ({})", player->name(), signature_str, name() );
+if(sim->debug) { sim->print_debug("{} regenerated target cache for {} ({})", player->name(), signature_str, name() ); }
     for ( size_t i = 0; i < tl.size(); i++ )
     {
-      sim->print_debug( "[{:n}, {} (id={})]", i, tl[ i ]->name(), tl[ i ]->actor_index );
+if(sim->debug) { sim->print_debug( "[{:n}, {} (id={})]", i, tl[ i ]->name(), tl[ i ]->actor_index ); }
     }
   }
 
@@ -1445,8 +1445,8 @@ block_result_e action_t::calculate_block_result( action_state_t* s ) const
     }
   }
 
-  sim->print_debug("{} result for {} is {}",
-      player->name(), name(), util::block_result_type_string( block_result ) );
+if(sim->debug) { sim->print_debug("{} result for {} is {}",
+      player->name(), name(), util::block_result_type_string( block_result ) ); }
 
   return block_result;
 }
@@ -1480,8 +1480,8 @@ void action_t::execute()
 
   if ( sim->log && !dual )
   {
-    sim->print_log("{} performs {} ({})",
-        player->name(), name(), player->resources.current[ player->primary_resource() ] );
+if(sim->log) { sim->print_log("{} performs {} ({})",
+        player->name(), name(), player->resources.current[ player->primary_resource() ] ); }
   }
 
   hit_any_target               = false;
@@ -1678,8 +1678,8 @@ void action_t::tick( dot_t* d )
 
     tick_action->schedule_execute( tick_state );
 
-    sim->print_log("{} {} ticks ({} of {}) {}",
-        player->name(), name(), d->current_tick, d->num_ticks, d->target->name() );
+if(sim->log) { sim->print_log("{} {} ticks ({} of {}) {}",
+        player->name(), name(), d->current_tick, d->num_ticks, d->target->name() ); }
   }
   else
   {
@@ -1840,8 +1840,8 @@ void action_t::schedule_execute( action_state_t* execute_state )
 {
   if ( target->is_sleeping() )
   {
-    sim->print_debug( "{} action={} attempted to schedule on a dead target {}",
-      player->name(), name(), target->name() );
+if(sim->debug) { sim->print_debug( "{} action={} attempted to schedule on a dead target {}",
+      player->name(), name(), target->name() ); }
 
     if ( execute_state )
     {
@@ -1962,18 +1962,18 @@ void action_t::update_ready( timespan_t cd_duration /* = timespan_t::min() */ )
 
     cooldown->start( this, cd_duration, delay );
 
-    sim->print_debug(
+if(sim->debug) { sim->print_debug(
           "{} starts cooldown for {} ({}, {}/{}). Duration={} Delay={}. Will "
           "be ready at {}",
           player->name(), name(), cooldown->name(), cooldown->current_charge, cooldown->charges,
-          cd_duration, delay, cooldown->ready );
+          cd_duration, delay, cooldown->ready ); }
 
     if ( internal_cooldown->duration > timespan_t::zero() )
     {
       internal_cooldown->start( this );
 
-      sim->print_debug("{} starts internal_cooldown for {} ({}). Will be ready at {}",
-          player->name(), name(), internal_cooldown->name(), internal_cooldown->ready );
+if(sim->debug) { sim->print_debug("{} starts internal_cooldown for {} ({}). Will be ready at {}",
+          player->name(), name(), internal_cooldown->name(), internal_cooldown->ready ); }
 
     }
   }
@@ -3292,8 +3292,8 @@ std::unique_ptr<expr_t> action_t::create_expression( const std::string& name_str
       {
         if ( !previously_used )
         {
-          a.sim->print_debug( "{} could not find action '{}' while setting up prev_gcd expression.", a.player->name(),
-                              prev_action );
+if(a.sim->debug) { a.sim->print_debug( "{} could not find action '{}' while setting up prev_gcd expression.", a.player->name(),
+                              prev_action ); }
         }
       }
 
@@ -3681,7 +3681,7 @@ void action_t::do_schedule_travel( action_state_t* state, timespan_t time_ )
   }
   else
   {
-    sim->print_log( "{} schedules travel ({}) for {}", player->name(), time_, name() );
+if(sim->log) { sim->print_log( "{} schedules travel ({}) for {}", player->name(), time_, name() ); }
 
     travel_events.push_back( make_event<travel_event_t>( *sim, this, state, time_ ) );
   }
@@ -4210,8 +4210,8 @@ void action_t::reschedule_queue_event()
     return;
   }
 
-  sim->print_debug( "{} {} adjusting queue-delayed execution, old={} new={}",
-      player->name(), name(), remaining.total_seconds(), new_queue_delay.total_seconds() );
+if(sim->debug) { sim->print_debug( "{} {} adjusting queue-delayed execution, old={} new={}",
+      player->name(), name(), remaining.total_seconds(), new_queue_delay.total_seconds() ); }
 
   if ( new_queue_delay > remaining )
   {

@@ -363,7 +363,7 @@ namespace warlock {
         if (p()->azerite.bursting_flare.ok() && td->dots_immolate->is_ticking())
           p()->buffs.bursting_flare->trigger();
 
-        sim->print_log("{}: Action {} {} charges remain", player->name(), name(), this->cooldown->current_charge);
+if(sim->log) { sim->print_log("{}: Action {} {} charges remain", player->name(), name(), this->cooldown->current_charge); }
       }
 
       double action_multiplier()const override

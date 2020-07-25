@@ -1048,10 +1048,10 @@ struct touch_of_the_magi_t : public buff_t
 
   void accumulate_damage( const action_state_t* s )
   {
-    sim->print_debug(
+if(sim->debug) { sim->print_debug(
       "{}'s {} accumulates {} additional damage: {} -> {}",
       player->name(), name(), s->result_total,
-      accumulated_damage, accumulated_damage + s->result_total );
+      accumulated_damage, accumulated_damage + s->result_total ); }
 
     accumulated_damage += s->result_total;
   }
@@ -1116,7 +1116,7 @@ struct ice_floes_buff_t : public buff_t
     if ( sim->current_time() - last_trigger > 0.5_s )
       buff_t::decrement( stacks, value );
     else
-      sim->print_debug( "Ice Floes removal ignored due to 500 ms protection" );
+if(sim->debug) { sim->print_debug( "Ice Floes removal ignored due to 500 ms protection" ); }
   }
 };
 
@@ -1694,11 +1694,11 @@ struct fire_mage_spell_t : public mage_spell_t
         {
           p->procs.heating_up_removed->occur();
           p->buffs.heating_up->expire();
-          sim->print_debug( "Heating Up removed by non-crit" );
+if(sim->debug) { sim->print_debug( "Heating Up removed by non-crit" ); }
         }
         else
         {
-          sim->print_debug( "Heating Up removal ignored due to 200 ms protection" );
+if(sim->debug) { sim->print_debug( "Heating Up removal ignored due to 200 ms protection" ); }
         }
       }
     }
@@ -6211,7 +6211,7 @@ void mage_t::recalculate_resource_max( resource_e rt )
     resources.max[ rt ] *= 1.0 + buffs.arcane_familiar->check_value();
 
     resources.current[ rt ] = resources.max[ rt ] * pct;
-    sim->print_debug( "{} adjusts maximum mana from {} to {} ({}%)", name(), max, resources.max[ rt ], 100 * pct );
+if(sim->debug) { sim->print_debug( "{} adjusts maximum mana from {} to {} ({}%)", name(), max, resources.max[ rt ], 100 * pct ); }
   }
 }
 
@@ -6507,8 +6507,8 @@ std::unique_ptr<expr_t> mage_t::create_expression( const std::string& name )
       double tick_rem = buffs.incanters_flow->tick_event->remains().total_seconds();
       double value = tick_rem + tick_time * ( std::min( ticks_lo, ticks_hi ) - 1 );
 
-      sim->print_debug( "incanters_flow_time_to: buff_position={} ticks_low={} ticks_high={} value={}",
-                        buff_pos, ticks_lo, ticks_hi, value );
+if(sim->debug) { sim->print_debug( "incanters_flow_time_to: buff_position={} ticks_low={} ticks_high={} value={}",
+                        buff_pos, ticks_lo, ticks_hi, value ); }
 
       return value;
     } );
@@ -6595,7 +6595,7 @@ void mage_t::update_rune_distance( double distance )
   if ( buffs.rune_of_power->check() && distance_from_rune > talents.rune_of_power->effectN( 2 ).radius() )
   {
     buffs.rune_of_power->expire();
-    sim->print_debug( "{} moved out of Rune of Power.", name() );
+if(sim->debug) { sim->print_debug( "{} moved out of Rune of Power.", name() ); }
   }
 }
 
@@ -6667,7 +6667,7 @@ void mage_t::trigger_icicle( player_t* icicle_target, bool chain )
   if ( chain && !icicle_event )
   {
     icicle_event = make_event<events::icicle_event_t>( *sim, *this, icicle_target, true );
-    sim->print_debug( "{} icicle use on {} (chained), total={}", name(), icicle_target->name(), icicles.size() );
+if(sim->debug) { sim->print_debug( "{} icicle use on {} (chained), total={}", name(), icicle_target->name(), icicles.size() ); }
   }
 
   if ( !chain )
@@ -6678,7 +6678,7 @@ void mage_t::trigger_icicle( player_t* icicle_target, bool chain )
 
     icicle_action->set_target( icicle_target );
     icicle_action->execute();
-    sim->print_debug( "{} icicle use on {}, total={}", name(), icicle_target->name(), icicles.size() );
+if(sim->debug) { sim->print_debug( "{} icicle use on {}, total={}", name(), icicle_target->name(), icicles.size() ); }
   }
 }
 

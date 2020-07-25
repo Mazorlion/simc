@@ -3591,9 +3591,9 @@ void arcane_heart( special_effect_t& effect )
         };
         omni->stats.front().stat = util::highest_stat( omni->player, ratings );
       }
-      omni->sim->print_debug( "arcane_heart omnipotence stack change: highest stat {} {} by {}",
+if(omni->sim->debug) { omni->sim->print_debug( "arcane_heart omnipotence stack change: highest stat {} {} by {}",
         util::stat_type_string( omni->stats.front().stat ), new_ ? "increased" : "decreased",
-        omni->stats.front().amount );
+        omni->stats.front().amount ); }
     } );
   }
 
@@ -3623,8 +3623,8 @@ void arcane_heart( special_effect_t& effect )
     {
       make_event( *buff->sim, [buff, amount] {
         buff->current_value -= amount;
-        buff->sim->print_debug(
-          "arcane_heart_counter ability:precombat damage:{} counter now at:{}", amount, buff->current_value );
+if(buff->sim->debug) { buff->sim->print_debug(
+          "arcane_heart_counter ability:precombat damage:{} counter now at:{}", amount, buff->current_value ); }
       } );
 
       return assessor::CONTINUE;
@@ -3632,8 +3632,8 @@ void arcane_heart( special_effect_t& effect )
 
     buff->current_value -= amount;
 
-    buff->sim->print_debug( "arcane_heart_counter ability:{} damage:{} counter now at:{}", state->action->name(),
-      amount, buff->current_value );
+if(buff->sim->debug) { buff->sim->print_debug( "arcane_heart_counter ability:{} damage:{} counter now at:{}", state->action->name(),
+      amount, buff->current_value ); }
 
     if ( buff->current_value <= 0 )
     {
@@ -3648,8 +3648,8 @@ void arcane_heart( special_effect_t& effect )
     buff->trigger();
     make_repeating_event( buff->sim, 1_s, [buff] {
       buff->current_value -= buff->sim->bfa_opts.arcane_heart_hps;
-      buff->sim->print_debug( "arcane_heart_counter healing:{} counter now at:{}", buff->sim->bfa_opts.arcane_heart_hps,
-                              buff->current_value );
+if(buff->sim->debug) { buff->sim->print_debug( "arcane_heart_counter healing:{} counter now at:{}", buff->sim->bfa_opts.arcane_heart_hps,
+                              buff->current_value ); }
     } );
   } );
 }
@@ -3694,7 +3694,7 @@ void personcomputer_interface( special_effect_t& effect )
   auto trinket = effect.player->find_item_by_id( 167555 );  // Pocket-sized Computation Device
   if ( !trinket )
   {
-    effect.player->sim->print_debug( "Person-Computer Interface equipped with no Pocket-Sized Computation Device." );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "Person-Computer Interface equipped with no Pocket-Sized Computation Device." ); }
     return;
   }
 
@@ -3705,7 +3705,7 @@ void personcomputer_interface( special_effect_t& effect )
 
   if ( it == trinket->parsed.special_effects.end() )
   {
-    effect.player->sim->print_debug( "Person-Computer Interface equipped with no Yellow Punchcards." );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "Person-Computer Interface equipped with no Yellow Punchcards." ); }
     return;
   }
 
@@ -3713,12 +3713,12 @@ void personcomputer_interface( special_effect_t& effect )
 
   if ( !stat )
   {
-    effect.player->sim->print_debug( "Person-Computer Interface could not find a stat from {}.", ( *it )->name() );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "Person-Computer Interface could not find a stat from {}.", ( *it )->name() ); }
     return;
   }
 
-  effect.player->sim->print_debug( "Person-Computer Interface found {}, adding {} {}.", ( *it )->name(),
-    power.value( 1 ), util::stat_type_string( stat ) );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "Person-Computer Interface found {}, adding {} {}.", ( *it )->name(),
+    power.value( 1 ), util::stat_type_string( stat ) ); }
 
   switch( stat )
   {
@@ -4982,15 +4982,15 @@ void strive_for_perfection( special_effect_t& effect )
   if ( !essence.enabled() )
     return;
 
-  effect.player->sim->print_debug(
-    "{} reducing cooldown by {}%", effect.name(), vision_of_perfection_cdr( essence ) * -100 );
+if(effect.player->sim->debug) { effect.player->sim->print_debug(
+    "{} reducing cooldown by {}%", effect.name(), vision_of_perfection_cdr( essence ) * -100 ); }
 
   if ( essence.rank() >= 3 )
   {
     double avg =
       essence.spell_ref( 3u, essence_spell::UPGRADE, essence_type::MINOR ).effectN( 1 ).average( essence.item() );
     effect.player->passive.versatility_rating += avg;
-    effect.player->sim->print_debug( "{} increasing versatility by {} rating", effect.name(), avg );
+if(effect.player->sim->debug) { effect.player->sim->print_debug( "{} increasing versatility by {} rating", effect.name(), avg ); }
   }
 }
 
@@ -5143,7 +5143,7 @@ void worldvein_resonance( special_effect_t& effect )
       : event_t( *buff_->source ), period_min( period_min_ ), period_max( period_max_ ), buff( buff_ )
     {
       auto next = next_event();
-      buff->sim->print_debug( "Scheduling Lifeblood event, next occurence in: {}", next.total_seconds() );
+if(buff->sim->debug) { buff->sim->print_debug( "Scheduling Lifeblood event, next occurence in: {}", next.total_seconds() ); }
       schedule( next );
     }
 
@@ -5192,12 +5192,12 @@ struct worldvein_resonance_buff_t : public buff_t
     if ( lifeblood->check() )
     {
       double delta = stat_entry.amount * lifeblood->current_stack - stat_entry.current_value;
-      sim->print_debug( "{} worldvein_resonance {}creases lifeblood stats by {}%,"
+if(sim->debug) { sim->print_debug( "{} worldvein_resonance {}creases lifeblood stats by {}%,"
                         " stacks={}, old={}, new={} ({}{})",
         player->name(),
         increase ? "in" : "de", data().effectN( 1 ).base_value(), lifeblood->current_stack,
         stat_entry.current_value, stat_entry.current_value + delta,
-        increase ? "+" : "", delta );
+        increase ? "+" : "", delta ); }
 
       if ( delta > 0 )
       {

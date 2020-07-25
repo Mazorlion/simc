@@ -140,8 +140,8 @@ struct tick_t : public buff_event_t
       total_ticks++;
     }
 
-    buff->sim->print_debug( "{} {} ticks ({} of {}).",
-        *buff->player, *buff, buff->current_tick, total_ticks );
+if(buff->sim->debug) { buff->sim->print_debug( "{} {} ticks ({} of {}).",
+        *buff->player, *buff, buff->current_tick, total_ticks ); }
 
     // Tick callback is called before the aura stack count is altered to ensure
     // that the buff is always up during the "tick". Last tick detection can be
@@ -214,8 +214,8 @@ struct expiration_t : public buff_event_t
     if ( last_tick && can_tick )
     {
       buff->current_tick++;
-      buff->sim->print_debug( "{} {} ticks ({} of {}).",
-          *buff->player, *buff, buff->current_tick, buff->current_tick );
+if(buff->sim->debug) { buff->sim->print_debug( "{} {} ticks ({} of {}).",
+          *buff->player, *buff, buff->current_tick, buff->current_tick ); }
 
       if ( buff->tick_callback )
       {
@@ -1077,20 +1077,20 @@ timespan_t buff_t::refresh_duration( timespan_t new_duration ) const
     {
       assert( tick_event );
       timespan_t residual = remains() % static_cast<tick_t*>( tick_event )->tick_time;
-      sim->print_debug(
+if(sim->debug) { sim->print_debug(
             "{} {} carryover duration from ongoing tick: {}, refresh_duration={} new_duration={}",
             *player, *this,
-            residual, new_duration, ( new_duration + residual ) );
+            residual, new_duration, ( new_duration + residual ) ); }
 
       return new_duration + residual;
     }
     case buff_refresh_behavior::PANDEMIC:
     {
       timespan_t residual = std::min( new_duration * 0.3, remains() );
-      sim->print_debug(
+if(sim->debug) { sim->print_debug(
             "{} {} carryover duration from ongoing tick: {}, refresh_duration={} new_duration={}",
             *player, *this,
-            residual, new_duration, ( new_duration + residual ) );
+            residual, new_duration, ( new_duration + residual ) ); }
 
       return new_duration + residual;
     }
@@ -1318,8 +1318,8 @@ void buff_t::execute( int stacks, double value, timespan_t duration )
   // new buff cooldown impl
   if ( cooldown->duration > timespan_t::zero() )
   {
-    sim->print_debug( "{} starts {} cooldown ({}) with duration {}", source_name(),
-                             *this, cooldown->name(), cooldown->duration );
+if(sim->debug) { sim->print_debug( "{} starts {} cooldown ({}) with duration {}", source_name(),
+                             *this, cooldown->name(), cooldown->duration ); }
 
     cooldown->start();
   }
@@ -1380,7 +1380,7 @@ void buff_t::decrement( int stacks, double value )
     if ( as<std::size_t>( current_stack ) < stack_uptime.size() )
       stack_uptime[ current_stack ].update( true, sim->current_time() );
 
-    sim->print_debug( "{} decremented by {} to {} stacks.", *this, stacks, current_stack );
+if(sim->debug) { sim->print_debug( "{} decremented by {} to {} stacks.", *this, stacks, current_stack ); }
 
     if ( old_stack != current_stack )
     {
@@ -1413,8 +1413,8 @@ void buff_t::extend_duration( player_t* p, timespan_t extra_seconds )
   {
     expiration.front()->reschedule( expiration.front()->remains() + extra_seconds );
 
-    sim->print_log( "{} extends {} by {}. New expiration time: {}",
-        *p, *this, extra_seconds, expiration.front()->occurs().total_seconds() );
+if(sim->log) { sim->print_log( "{} extends {} by {}. New expiration time: {}",
+        *p, *this, extra_seconds, expiration.front()->occurs().total_seconds() ); }
   }
   else if ( extra_seconds < timespan_t::zero() )
   {
@@ -1437,8 +1437,8 @@ void buff_t::extend_duration( player_t* p, timespan_t extra_seconds )
 
     expiration.push_back( make_event<expiration_t>( *sim, this, reschedule_time ) );
 
-    sim->print_debug( "{} decreases {} by {}. New expiration: {}",
-        *p, *this, -extra_seconds, expiration.back()->occurs().total_seconds() );
+if(sim->debug) { sim->print_debug( "{} decreases {} by {}. New expiration: {}",
+        *p, *this, -extra_seconds, expiration.back()->occurs().total_seconds() ); }
   }
 }
 
@@ -1608,12 +1608,12 @@ void buff_t::refresh( int stacks, double value, timespan_t duration )
     {
       if ( !player->is_sleeping() )
       {
-        sim->print_log( "{} refreshes {} (value={})", *player, buff_display_name, current_value );
+if(sim->log) { sim->print_log( "{} refreshes {} (value={})", *player, buff_display_name, current_value ); }
       }
     }
     else
     {
-      sim->print_log( "Raid refreshes {} (value={})", buff_display_name, current_value );
+if(sim->log) { sim->print_log( "Raid refreshes {} (value={})", buff_display_name, current_value ); }
     }
   }
 }
@@ -1893,12 +1893,12 @@ void buff_t::aura_gain()
     {
       if ( !player->is_sleeping() )
       {
-        sim->print_log( "{} gains {} (value={})", *player, buff_display_name, current_value );
+if(sim->log) { sim->print_log( "{} gains {} (value={})", *player, buff_display_name, current_value ); }
       }
     }
     else
     {
-      sim->print_log( "Raid gains {} (value={})", buff_display_name, current_value );
+if(sim->log) { sim->print_log( "Raid gains {} (value={})", buff_display_name, current_value ); }
     }
   }
 }
@@ -1909,12 +1909,12 @@ void buff_t::aura_loss()
   {
     if ( !player->is_sleeping() )
     {
-      sim->print_log( "{} loses {}", *player, name_str );
+if(sim->log) { sim->print_log( "{} loses {}", *player, name_str ); }
     }
   }
   else
   {
-    sim->print_log( "Raid loses {}", name_str );
+if(sim->log) { sim->print_log( "Raid loses {}", name_str ); }
   }
 }
 
@@ -2365,7 +2365,7 @@ void stat_buff_t::decrement( int stacks, double /* value */ )
     if ( as<std::size_t>( current_stack ) < stack_uptime.size() )
       stack_uptime[ current_stack ].update( true, sim->current_time() );
 
-    sim->print_debug( "{} decremented by {} to {} stacks.", *this, stacks, current_stack );
+if(sim->debug) { sim->print_debug( "{} decremented by {} to {} stacks.", *this, stacks, current_stack ); }
 
     if ( old_stack != current_stack )
     {
@@ -2541,7 +2541,7 @@ double absorb_buff_t::consume( double amount )
 
   current_value -= amount;
 
-  sim->print_debug( "{} {} absorbs {} (remaining: {})", *player, *this, amount, current_value );
+if(sim->debug) { sim->print_debug( "{} {} absorbs {} (remaining: {})", *player, *this, amount, current_value ); }
 
   absorb_used( amount );
 

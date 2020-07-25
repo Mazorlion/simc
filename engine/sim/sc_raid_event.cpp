@@ -910,9 +910,9 @@ struct heal_event_t : public raid_event_t
         if ( to_pct_range > 0 )
           pct_actual = sim->rng().range( to_pct - to_pct_range, to_pct + to_pct_range );
 
-        sim->print_debug( "{} heals {} {}% ({}) of max health, current health {}", *this, p->name(), pct_actual,
+if(sim->debug) { sim->print_debug( "{} heals {} {}% ({}) of max health, current health {}", *this, p->name(), pct_actual,
                           p->resources.max[ RESOURCE_HEALTH ] * pct_actual / 100,
-                          p->resources.current[ RESOURCE_HEALTH ] );
+                          p->resources.current[ RESOURCE_HEALTH ] ); }
 
         amount_to_heal = p->resources.max[ RESOURCE_HEALTH ] * pct_actual / 100;
         amount_to_heal -= p->resources.current[ RESOURCE_HEALTH ];
@@ -961,7 +961,7 @@ struct damage_taken_debuff_event_t : public raid_event_t
   {
     for ( auto p : affected_players )
     {
-      sim->print_log( "{} gains {} stacks of damage_taken debuff from {}.", p->name(), amount, *this );
+if(sim->log) { sim->print_log( "{} gains {} stacks of damage_taken debuff from {}.", p->name(), amount, *this ); }
 
       if ( p->debuffs.damage_taken )
         p->debuffs.damage_taken->trigger( amount );
@@ -1262,7 +1262,7 @@ bool raid_event_t::up() const
 
 void raid_event_t::start()
 {
-  sim->print_log( "{} starts.", *this );
+if(sim->log) { sim->print_log( "{} starts.", *this ); }
 
   num_starts++;
   is_up = true;
@@ -1303,7 +1303,7 @@ void raid_event_t::finish()
 
   _finish();
 
-  sim->print_log( "{} finishes.", *this );
+if(sim->log) { sim->print_log( "{} finishes.", *this ); }
 }
 
 /**
@@ -1313,7 +1313,7 @@ void raid_event_t::activate()
 {
   if ( activation_status == activation_status_e::deactivated )
   {
-    sim->print_debug( "{} already deactivated. (last/last_pct happened before first/last_pct).", *this );
+if(sim->debug) { sim->print_debug( "{} already deactivated. (last/last_pct happened before first/last_pct).", *this ); }
     return;
   }
   if ( activation_status == activation_status_e::activated )
@@ -1321,7 +1321,7 @@ void raid_event_t::activate()
     // Already activated, do nothing.
     return;
   }
-  sim->print_debug( "{} activated (first/first_pct reached).", *this );
+if(sim->debug) { sim->print_debug( "{} activated (first/first_pct reached).", *this ); }
   activation_status = activation_status_e::activated;
   schedule();
 }
@@ -1333,12 +1333,12 @@ void raid_event_t::activate()
  */
 void raid_event_t::deactivate()
 {
-  sim->print_debug( "{} deactivated (last/last_pct reached).", *this );
+if(sim->debug) { sim->print_debug( "{} deactivated (last/last_pct reached).", *this ); }
   activation_status = activation_status_e::deactivated;
   event_t::cancel( cooldown_event );
   if ( force_stop )
   {
-    sim->print_debug( "{} is force stopped.", *this );
+if(sim->debug) { sim->print_debug( "{} is force stopped.", *this ); }
     event_t::cancel( duration_event );
     finish();
   }
@@ -1412,7 +1412,7 @@ void raid_event_t::combat_begin()
 
 void raid_event_t::schedule()
 {
-  sim->print_debug( "Scheduling {}", *this );
+if(sim->debug) { sim->print_debug( "Scheduling {}", *this ); }
 
   struct duration_event_t : public event_t
   {
@@ -1618,7 +1618,7 @@ void raid_event_t::init( sim_t* sim )
     std::string name    = split;
     std::string options = "";
 
-    sim->print_debug( "Creating raid event '{}'.", name );
+if(sim->debug) { sim->print_debug( "Creating raid event '{}'.", name ); }
 
     std::string::size_type cut_pt = name.find_first_of( "," );
 
@@ -1640,7 +1640,7 @@ void raid_event_t::init( sim_t* sim )
         throw std::invalid_argument( "Cooldown lower than cooldown standard deviation." );
       }
 
-      sim->print_debug( "Successfully created '{}'.", *( raid_event.get() ) );
+if(sim->debug) { sim->print_debug( "Successfully created '{}'.", *( raid_event.get() ) ); }
       sim->raid_events.push_back( std::move( raid_event ) );
     }
     catch ( const std::exception& )
